@@ -8,8 +8,8 @@ const logger = require('morgan');
 require('dotenv').config();
 
 // Routes ...
-const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const postsRouter = require('./routes/posts');
 
 const app = express();
 
@@ -41,7 +41,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/user', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/user', usersRouter);
+app.use('/api/posts', postsRouter);
 
 module.exports = app;
