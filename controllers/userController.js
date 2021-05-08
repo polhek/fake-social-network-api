@@ -12,3 +12,5 @@ exports.facebookLogin = async (req, res, next) => {
     expiresIn: token.expires,
   });
 };
+
+//! friend lista, addanje itd.
