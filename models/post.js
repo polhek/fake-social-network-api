@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Comment = require('./comments');
-const { deleteMany } = require('./user');
 
 const Schema = mongoose.Schema;
 
