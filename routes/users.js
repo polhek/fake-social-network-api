@@ -10,13 +10,22 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 const fbAuth = passport.authenticate('facebookToken', { session: false });
 
 /* GET home page. */
-router.get('/', function (req, rest) {
+router.get('/', function (req, res) {
   res.render('index', { title: 'Express' });
 });
 
 router.post('/oauth/facebook', fbAuth, userController.facebookLogin);
 
+// Send friend request!
 router.post('/sendRequest', jwtAuth, userController.sendFriendRequest);
+
+// cancel send friend request!
+router.delete(
+  '/cancel-friend',
+  jwtAuth,
+  userController.cancelSendFriendRequest
+);
+
 // Protected API route, you can access it only by providing the valid token...
 router.get('/secret', jwtAuth, (req, res) => {
   return res.json({ msg: 'You accessed a secret!' });
