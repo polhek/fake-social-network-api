@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-//! ne pozabi na vseh protectanih routih nardit tega, da requiraš file passport.js in passport nasploh
+
 const passport = require('passport');
 const passportConfig = require('../auth/passport');
 const userController = require('../controllers/userController');
@@ -17,14 +17,19 @@ router.get('/', function (req, res) {
 router.post('/oauth/facebook', fbAuth, userController.facebookLogin);
 
 // Send friend request!
-router.post('/sendRequest', jwtAuth, userController.sendFriendRequest);
+router.post('/:id/sendRequest', jwtAuth, userController.sendFriendRequest);
+
+router.put('/:id/accept-friend', jwtAuth, userController.acceptFriend);
 
 // cancel send friend request!
 router.delete(
-  '/cancel-friend',
+  '/:id/cancel-friend',
   jwtAuth,
   userController.cancelSendFriendRequest
 );
+
+// remove friend
+router.delete('/:id/remove-friend', jwtAuth, userController.removeFriend);
 
 // Protected API route, you can access it only by providing the valid token...
 router.get('/secret', jwtAuth, (req, res) => {

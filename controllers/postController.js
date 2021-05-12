@@ -2,8 +2,9 @@ const Post = require('../models/post');
 const User = require('../models/user');
 
 //New post route ...
-exports.newPost = async (req, res, next) => {
-  const { userId, text } = req.body;
+exports.newPost = async (req, res) => {
+  const { text } = req.body;
+  const userId = req.user._id;
 
   const newPost = new Post({
     user: userId,
@@ -12,16 +13,20 @@ exports.newPost = async (req, res, next) => {
 
   try {
     const post = await newPost.save();
+    const loggedUser = await User.findById(userId);
+    loggedUser.posts.push(post._id);
 
-    res.status(200).json({ sucess: true, post: post });
+    await loggedUser.save();
+
+    res.status(200).json({ sucess: true, post: post, user: loggedUser });
   } catch (err) {
-    return next(err);
+    return res.status(400).json({ success: false, msg: err.message });
   }
 };
 
-exports.friendsOnlyPosts = async (req, res, next) => {
+exports.friendsOnlyPosts = async (req, res) => {
   try {
-    const { loggedUserID } = req.body;
+    const loggedUserID = req.user._id;
 
     const loggedUser = await User.findById(loggedUserID);
     const friendList = loggedUser.friends;
@@ -46,7 +51,7 @@ exports.friendsOnlyPosts = async (req, res, next) => {
 };
 
 // edit post...
-exports.editPost = async (req, res, next) => {
+exports.editPost = async (req, res) => {
   try {
     const { id } = req.params;
     const { text } = req.body;
@@ -63,10 +68,19 @@ exports.editPost = async (req, res, next) => {
 };
 
 //remove post...
-exports.removePost = async (req, res, next) => {
+exports.removePost = async (req, res) => {
   try {
+    const loggedUser_id = req.user._id;
     const { id } = req.params;
     const deletedPost = await Post.findByIdAndRemove(id);
+    const user = await User.findById(loggedUser_id);
+
+    const updatedPosts = user.posts.filter((item) => item != id);
+    user.posts = updatedPosts;
+
+    await user.save();
+
+    // preveri če dela
     return res.status(200).json({
       success: true,
       msg: 'Post was successfuly deleted!',
