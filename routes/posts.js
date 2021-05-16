@@ -17,7 +17,7 @@ router.get('/all', jwtAuth, postController.friendsOnlyPosts);
 router.post('/newPost', jwtAuth, postController.newPost);
 
 //UPDATE post
-router.put('/:id/update', postController.editPost);
+router.put('/:id/update', jwtAuth, postController.editPost);
 
 // DELETE post by specifying id!
 router.delete('/:id/remove', jwtAuth, postController.removePost);

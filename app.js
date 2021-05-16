@@ -10,6 +10,7 @@ require('dotenv').config();
 // Routes ...
 const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
+const commentRouter = require('./routes/comments');
 
 const app = express();
 
@@ -43,5 +44,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/user', usersRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api/post', commentRouter);
 
 module.exports = app;

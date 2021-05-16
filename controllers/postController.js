@@ -53,8 +53,16 @@ exports.friendsOnlyPosts = async (req, res) => {
 // edit post...
 exports.editPost = async (req, res) => {
   try {
+    const loggedUser_id = req.user._id;
     const { id } = req.params;
     const { text } = req.body;
+    const post = await Post.findById(id);
+
+    if (post.user !== loggedUser_id) {
+      return res
+        .status(400)
+        .json({ success: false, msg: 'You cannot edit other peoples posts!' });
+    }
 
     const updatedPost = await Post.findByIdAndUpdate(id, { text: text });
     res.status(200).json({
