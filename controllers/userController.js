@@ -2,15 +2,27 @@ const User = require('../models/user');
 const utils = require('../utils/utils');
 
 exports.facebookLogin = async (req, res) => {
-  // Issue JWT for logged in user and return user !
-  const token = utils.issueJwtToken(req.user);
+  try {
+    const { _id } = req.user;
+    const token = utils.issueJwtToken(req.user);
 
-  res.status(200).json({
-    success: true,
-    user: req.user,
-    token: token.token,
-    expiresIn: token.expires,
-  });
+    const user = await User.findById(_id)
+      .select('-password')
+      .populate('friends')
+      .populate('friend_send')
+      .populate('friend_requests')
+      .populate('posts');
+
+    res.status(200).json({
+      success: true,
+      user: user,
+      token: token.token,
+      expiresIn: token.expires,
+    });
+  } catch (err) {
+    res.status(500).json({ sucess: false, msg: err.message });
+  }
+  // Issue JWT for logged in user and return user !
 };
 
 //send friend request!!!
@@ -178,3 +190,6 @@ exports.removeFriend = async (req, res) => {
     return res.status(400).json({ success: false, msg: err.message });
   }
 };
+
+// get user data and posts
+exports.userProfile = async (req, res) => {};

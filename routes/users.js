@@ -36,4 +36,7 @@ router.get('/secret', jwtAuth, (req, res) => {
   return res.json({ msg: 'You accessed a secret!' });
 });
 
+// userprofile
+router.get('/profile', jwtAuth, userController.userProfile);
+
 module.exports = router;

@@ -22,4 +22,7 @@ router.put('/:id/update', jwtAuth, postController.editPost);
 // DELETE post by specifying id!
 router.delete('/:id/remove', jwtAuth, postController.removePost);
 
+// LIKE POST - specify id
+router.put('/:id/like', jwtAuth, postController.likePost);
+
 module.exports = router;

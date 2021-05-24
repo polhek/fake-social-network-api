@@ -33,7 +33,11 @@ exports.friendsOnlyPosts = async (req, res) => {
 
     friendList.push(loggedUserID);
 
-    const posts = await Post.find({ user: { $in: friendList } });
+    const posts = await Post.find({ user: { $in: friendList } })
+      .populate('user', '-password')
+      .populate('comments')
+      .populate('likes', '-password')
+      .sort('-createdAt');
 
     console.log(posts);
     res.status(200).json({
@@ -54,7 +58,7 @@ exports.friendsOnlyPosts = async (req, res) => {
 exports.editPost = async (req, res) => {
   try {
     const loggedUser_id = req.user._id;
-    const { id } = req.params;
+    const id = req.params.id;
     const { text } = req.body;
     const post = await Post.findById(id);
 
@@ -79,7 +83,7 @@ exports.editPost = async (req, res) => {
 exports.removePost = async (req, res) => {
   try {
     const loggedUser_id = req.user._id;
-    const { id } = req.params;
+    const id = req.params.id;
     const deletedPost = await Post.findByIdAndRemove(id);
     const user = await User.findById(loggedUser_id);
 
@@ -98,5 +102,38 @@ exports.removePost = async (req, res) => {
     return res
       .status(409)
       .json({ success: false, msg: "Post wasn't deleted!" });
+  }
+};
+
+exports.likePost = async (req, res) => {
+  try {
+    const loggedUser_id = req.user._id;
+    const post_id = req.params.id;
+
+    const post = await Post.findById(post_id);
+
+    const likesArr = post.likes;
+
+    if (likesArr.includes(loggedUser_id)) {
+      const updatedLikes = likesArr.filter(
+        (item) => item != loggedUser_id.toString()
+      );
+      post.likes = updatedLikes;
+      await post.save();
+    } else {
+      const updatedLikes = [...likesArr, loggedUser_id];
+      post.likes = updatedLikes;
+      await post.save();
+    }
+
+    res.status(200).json({
+      success: true,
+      post,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message,
+    });
   }
 };
