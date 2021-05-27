@@ -54,7 +54,7 @@ passport.use(
         const profilePicture = `https://graph.facebook.com/${profile.id}/picture?width=200&height=200&access_token=${accessToken}`;
         const newUser = new User({
           first_name: profile.name.givenName,
-          last_name: profile.name.givenName,
+          last_name: profile.name.familyName,
           email: profile.emails[0].value,
           profile_img_url: profilePicture,
           facebook_id: profile.id,
