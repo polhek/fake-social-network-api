@@ -48,6 +48,10 @@ passport.use(
         // Check if user exists...
         const existingUser = await User.findOne({ facebook_id: profile.id });
         if (existingUser) {
+          const profilePicture = `https://graph.facebook.com/${profile.id}/picture?width=200&height=200&access_token=${accessToken}`;
+          existingUser.profile_img_url = profilePicture;
+          await existingUser.save();
+
           return done(null, existingUser);
         }
 
