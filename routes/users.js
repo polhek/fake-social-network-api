@@ -17,7 +17,7 @@ router.get('/', function (req, res) {
 router.post('/oauth/facebook', fbAuth, userController.facebookLogin);
 
 // Send friend request!
-router.post('/:id/sendRequest', jwtAuth, userController.sendFriendRequest);
+router.post('/:id/send-request', jwtAuth, userController.sendFriendRequest);
 
 router.put('/:id/accept-friend', jwtAuth, userController.acceptFriend);
 
