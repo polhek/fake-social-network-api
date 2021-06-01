@@ -191,5 +191,19 @@ exports.removeFriend = async (req, res) => {
   }
 };
 
-// get user data and posts
-exports.userProfile = async (req, res) => {};
+// get all users...
+exports.allUsers = async (req, res) => {
+  const loggedUser_id = req.user._id;
+
+  try {
+    const users = await User.find({
+      _id: { $ne: loggedUser_id.toString() },
+    });
+    console.log(users);
+    return res
+      .status(200)
+      .json({ success: true, msg: 'All users in JSON', allUsers: users });
+  } catch (err) {
+    return res.status(400).json({ success: false, msg: err.message });
+  }
+};
