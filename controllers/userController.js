@@ -69,7 +69,7 @@ exports.sendFriendRequest = async (req, res) => {
 };
 
 //cancel friend request!
-exports.cancelSendFriendRequest = async (req, res) => {
+exports.unsendFriendRequest = async (req, res) => {
   const loggedUser_id = req.user._id;
   const secondUser_id = req.params.id;
 
@@ -147,6 +147,45 @@ exports.acceptFriend = async (req, res) => {
     return res.status(200).json({
       success: true,
       msg: 'Accepted friend request!',
+      user: updatedLoggedUser,
+    });
+  } catch (err) {
+    return res.status(400).json({ success: false, msg: err.message });
+  }
+};
+
+exports.cancelFriendRequest = async (req, res) => {
+  const loggedUser_id = req.user._id;
+  const secondUser_id = req.params.id;
+
+  try {
+    const loggedUser = await User.findById(loggedUser_id);
+    const secondUser = await User.findById(secondUser_id);
+
+    if (!secondUser.friend_send.includes(loggedUser_id.toString())) {
+      return res
+        .status(404)
+        .json({ success: false, msg: 'Cannot find a friend request!' });
+    }
+
+    const updatedReceivedLogged = loggedUser.friend_requests.filter((item) => {
+      item != secondUser._id.toString();
+    });
+
+    const updatedReceivedSecond = secondUser.friend_send.filter((item) => {
+      item != loggedUser._id.toString();
+    });
+
+    console.log(updatedReceivedLogged);
+    loggedUser.friend_send = updatedReceivedLogged;
+    secondUser.friend_requests = updatedReceivedSecond;
+
+    const updatedLoggedUser = await loggedUser.save();
+    await secondUser.save();
+
+    return res.status(200).json({
+      success: true,
+      msg: 'Friend requests was sucessfuly removed!',
       user: updatedLoggedUser,
     });
   } catch (err) {

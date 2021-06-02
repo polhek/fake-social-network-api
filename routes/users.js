@@ -21,11 +21,18 @@ router.post('/:id/send-request', jwtAuth, userController.sendFriendRequest);
 
 router.put('/:id/accept-friend', jwtAuth, userController.acceptFriend);
 
-// cancel send friend request!
+// deny friend request
 router.delete(
   '/:id/cancel-friend',
   jwtAuth,
-  userController.cancelSendFriendRequest
+  userController.cancelFriendRequest
+);
+
+// cancel send friend request!
+router.delete(
+  '/:id/unsend-friend',
+  jwtAuth,
+  userController.unsendFriendRequest
 );
 
 // remove friend
