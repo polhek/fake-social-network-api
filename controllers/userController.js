@@ -177,8 +177,8 @@ exports.cancelFriendRequest = async (req, res) => {
     });
 
     console.log(updatedReceivedLogged);
-    loggedUser.friend_send = updatedReceivedLogged;
-    secondUser.friend_requests = updatedReceivedSecond;
+    loggedUser.friend_requests = updatedReceivedLogged;
+    secondUser.friend_send = updatedReceivedSecond;
 
     const updatedLoggedUser = await loggedUser.save();
     await secondUser.save();
