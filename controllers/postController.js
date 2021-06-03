@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const User = require('../models/user');
+const Comment = require('../models/comments');
 
 //New post route ...
 exports.newPost = async (req, res) => {
