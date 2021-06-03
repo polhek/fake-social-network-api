@@ -36,7 +36,6 @@ exports.friendsOnlyPosts = async (req, res) => {
 
     const posts = await Post.find({ user: { $in: friendList } })
       .populate('user', '-password')
-      .populate('comments')
       .populate('likes', '-password')
       .sort('-createdAt');
 
