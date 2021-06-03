@@ -246,3 +246,22 @@ exports.allUsers = async (req, res) => {
     return res.status(400).json({ success: false, msg: err.message });
   }
 };
+
+exports.updateUser = async (req, res) => {
+  const id = req.user._id;
+  try {
+    const user = await User.findById(id)
+      .select('-password')
+      .populate('friends')
+      .populate('friend_send')
+      .populate('friend_requests')
+      .populate('posts');
+
+    return res.status(200).json({
+      success: true,
+      user: user,
+    });
+  } catch (err) {
+    return res.status(400).json({ success: false, msg: err.message });
+  }
+};

@@ -46,5 +46,6 @@ router.get('/secret', jwtAuth, (req, res) => {
 router.get('/allUsers', jwtAuth, userController.allUsers);
 
 // userprofile
+router.get('/updateUser', jwtAuth, userController.updateUser);
 
 module.exports = router;
