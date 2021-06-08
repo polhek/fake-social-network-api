@@ -1,6 +1,5 @@
 const Post = require('../models/post');
 const User = require('../models/user');
-const Comment = require('../models/comments');
 
 //New post route ...
 exports.newPost = async (req, res) => {
@@ -36,6 +35,7 @@ exports.friendsOnlyPosts = async (req, res) => {
 
     const posts = await Post.find({ user: { $in: friendList } })
       .populate('user', '-password')
+      .populate('comments')
       .populate('likes', '-password')
       .sort('-createdAt');
 
