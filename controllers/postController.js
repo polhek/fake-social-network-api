@@ -58,6 +58,31 @@ exports.friendsOnlyPosts = async (req, res) => {
   }
 };
 
+// get specified post
+
+exports.getSinglePost = async (req, res) => {
+  try {
+    const loggedUser_id = req.user._id;
+    const postId = req.params.id;
+
+    const singlePost = await Post.findById(postId);
+
+    return res
+      .status(200)
+      .json({
+        success: true,
+        msg: 'Post was successfuly found!',
+        post: singlePost,
+      });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      msg: 'Could not get specified  post!',
+      error: error.message,
+    });
+  }
+};
+
 // edit post...
 exports.editPost = async (req, res) => {
   try {

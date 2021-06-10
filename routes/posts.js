@@ -16,6 +16,9 @@ router.get('/all', jwtAuth, postController.friendsOnlyPosts);
 //CREATE new post...
 router.post('/newPost', jwtAuth, postController.newPost);
 
+// GET post to update ...
+router.get('/:id', jwtAuth, postController.getSinglePost);
+
 //UPDATE post
 router.put('/:id/update', jwtAuth, postController.editPost);
 
