@@ -89,7 +89,7 @@ exports.editPost = async (req, res) => {
     const { text } = req.body;
     const post = await Post.findById(id);
 
-    if (post.user._id !== loggedUser_id) {
+    if (post.user.toString() !== loggedUser_id.toString()) {
       return res
         .status(400)
         .json({ success: false, msg: 'You cannot edit other peoples posts!' });
