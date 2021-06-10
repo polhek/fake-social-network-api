@@ -67,13 +67,11 @@ exports.getSinglePost = async (req, res) => {
 
     const singlePost = await Post.findById(postId);
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        msg: 'Post was successfuly found!',
-        post: singlePost,
-      });
+    return res.status(200).json({
+      success: true,
+      msg: 'Post was successfuly found!',
+      post: singlePost,
+    });
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -91,7 +89,7 @@ exports.editPost = async (req, res) => {
     const { text } = req.body;
     const post = await Post.findById(id);
 
-    if (post.user !== loggedUser_id) {
+    if (post.user._id !== loggedUser_id) {
       return res
         .status(400)
         .json({ success: false, msg: 'You cannot edit other peoples posts!' });
