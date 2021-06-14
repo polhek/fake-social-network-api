@@ -4,7 +4,16 @@ const FacebookTokenStrategy = require('passport-facebook-token');
 const { ExtractJwt } = require('passport-jwt');
 require('dotenv').config();
 const User = require('../models/user');
+const request = require('request');
+const fs = require('fs');
+const path = require('path');
 
+console.log(
+  path.join(
+    path.dirname('/facebook-clone-api/server/src/'),
+    '/src/public/images/'
+  )
+);
 // Secret for JWT token strategy ...
 const secretOrKey = process.env.secretOrKey;
 
@@ -47,22 +56,26 @@ passport.use(
       try {
         // Check if user exists...
         const existingUser = await User.findOne({ facebook_id: profile.id });
-        if (existingUser) {
-          const profilePicture = `https://graph.facebook.com/${profile.id}/picture?width=200&height=200&access_token=${accessToken}`;
-          existingUser.profile_img_url = profilePicture;
-          await existingUser.save();
 
+        if (existingUser) {
+          await existingUser.save();
           return done(null, existingUser);
         }
 
         const profilePicture = `https://graph.facebook.com/${profile.id}/picture?width=200&height=200&access_token=${accessToken}`;
+
         const newUser = new User({
           first_name: profile.name.givenName,
           last_name: profile.name.familyName,
           email: profile.emails[0].value,
-          profile_img_url: profilePicture,
+          profile_img_url: '',
           facebook_id: profile.id,
         });
+
+        const path = `./public/images/${newUser._id}.jpeg`;
+        newUser.profile_img_url = path;
+
+        request(profilePicture).pipe(fs.createWriteStream(path));
 
         await newUser.save();
         return done(null, newUser);
