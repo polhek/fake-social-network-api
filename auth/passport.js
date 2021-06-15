@@ -7,14 +7,12 @@ const User = require('../models/user');
 const request = require('request');
 const fs = require('fs');
 const path = require('path');
+const aws = require('aws-sdk');
 
-console.log(
-  path.join(
-    path.dirname('/facebook-clone-api/server/src/'),
-    '/src/public/images/'
-  )
-);
+aws.config.region = 'us-east-2';
+
 // Secret for JWT token strategy ...
+
 const secretOrKey = process.env.secretOrKey;
 
 // Facebook app secret and ID ...
@@ -63,20 +61,41 @@ passport.use(
         }
 
         const profilePicture = `https://graph.facebook.com/${profile.id}/picture?width=200&height=200&access_token=${accessToken}`;
+        const s3 = new aws.S3();
 
         const newUser = new User({
           first_name: profile.name.givenName,
           last_name: profile.name.familyName,
           email: profile.emails[0].value,
-          profile_img_url: '',
+          profile_img_url: profilePicture,
           facebook_id: profile.id,
         });
 
-        const path = `./public/images/${newUser._id}.jpeg`;
-        newUser.profile_img_url = path;
-
-        request(profilePicture).pipe(fs.createWriteStream(path));
-
+        request(
+          { uri: profilePicture, encoding: null },
+          (err, response, body) => {
+            if (err || response.statusCode !== 200) {
+              console.log('failed to get image');
+              console.log(err);
+            } else {
+              s3.upload(
+                {
+                  Body: body,
+                  Key: `profile/images/${newUser._id}.jpeg`,
+                  Bucket: process.env.S3_BUCKET_NAME,
+                },
+                (err, data) => {
+                  if (err) {
+                    return err;
+                  } else {
+                    return data;
+                  }
+                }
+              );
+            }
+          }
+        );
+        newUser.profile_img_url = `https://${process.env.S3_BUCKET_NAME}.s3.us-east-2.amazonaws.com/profile/images/${newUser._id}.jpeg`;
         await newUser.save();
         return done(null, newUser);
       } catch (err) {
