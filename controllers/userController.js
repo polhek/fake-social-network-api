@@ -276,7 +276,7 @@ exports.newProfileImage = async (req, res) => {
     const s3 = new aws.S3();
     const user = await User.findById(id);
 
-    const fileContent = Buffer.from(req.files.uploadedFileName.data, 'binary');
+    const fileContent = Buffer.from(req.file.uploadedFileName.data, 'binary');
 
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
