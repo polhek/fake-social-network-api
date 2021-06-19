@@ -273,24 +273,24 @@ exports.updateUser = async (req, res) => {
 exports.newProfileImage = async (req, res) => {
   try {
     console.log(req.files);
-    // const id = req.user._id;
-    // const s3 = new aws.S3();
-    // const user = await User.findById(id);
+    const id = req.user._id;
+    const s3 = new aws.S3();
+    const user = await User.findById(id);
 
-    // const fileContent = Buffer.from(req.files.uploadedFileName.data, 'binary');
+    const fileContent = Buffer.from(req.files.file.data, 'binary');
 
-    // const params = {
-    //   Bucket: process.env.S3_BUCKET_NAME,
-    //   Key: `profile/images/${user._id}.jpeg`, // File name you want to save as in S3
-    //   Body: fileContent,
-    // };
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: `profile/images/${user._id}.jpeg`, // File name you want to save as in S3
+      Body: fileContent,
+    };
 
-    // s3.upload(params, (err, data) => {
-    //   if (err) {
-    //     res.send(err);
-    //   }
-    //   res.status(200).json({ success: true, msg: 'File saved!', data: data });
-    //});
+    s3.upload(params, (err, data) => {
+      if (err) {
+        res.send(err);
+      }
+      res.status(200).json({ success: true, msg: 'File saved!', data: data });
+    });
   } catch (error) {
     return res.status(400).json({ success: false, msg: error.message });
   }
