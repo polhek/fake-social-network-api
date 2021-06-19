@@ -293,7 +293,9 @@ exports.newProfileImage = async (req, res) => {
     updatedUser.profile_img_url = `https://${process.env.S3_BUCKET_NAME}.s3.us-east-2.amazonaws.com/profile/images/${updatedUser._id}.jpeg`;
 
     await updatedUser.save();
-    res.status(200).json({ success: true, msg: 'File saved!' });
+    res
+      .status(200)
+      .json({ success: true, msg: 'File saved!', user: updatedUser });
   } catch (error) {
     return res.status(400).json({ success: false, msg: error.message });
   }
