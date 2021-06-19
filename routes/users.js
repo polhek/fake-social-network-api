@@ -48,6 +48,6 @@ router.get('/allUsers', jwtAuth, userController.allUsers);
 // userprofile
 router.get('/updateUser', jwtAuth, userController.updateUser);
 
-router.put('/updateProfilePicture', jwtAuth, userController.newProfileImage);
+router.post('/updateProfilePicture', jwtAuth, userController.newProfileImage);
 
 module.exports = router;
