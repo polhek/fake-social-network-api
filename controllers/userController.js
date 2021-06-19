@@ -281,7 +281,7 @@ exports.newProfileImage = async (req, res) => {
 
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: `profile/images/${user._id}.jpeg`, // File name you want to save as in S3
+      Key: `profile/images/${updatedUser._id}.jpeg`, // File name you want to save as in S3
       Body: fileContent,
     };
 
