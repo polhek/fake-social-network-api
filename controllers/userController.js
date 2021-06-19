@@ -262,7 +262,6 @@ exports.updateUser = async (req, res) => {
       .populate({
         path: 'posts',
         populate: { path: 'user' },
-        options: { sort: { createdAt: -1 } },
       });
 
     return res.status(200).json({
