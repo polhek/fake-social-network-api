@@ -275,7 +275,7 @@ exports.newProfileImage = async (req, res) => {
     console.log(req.files);
     const id = req.user._id;
     const s3 = new aws.S3();
-    const user = await User.findById(id);
+    const updatedUser = await User.findById(id);
 
     const fileContent = Buffer.from(req.files.file.data, 'binary');
 
@@ -289,8 +289,11 @@ exports.newProfileImage = async (req, res) => {
       if (err) {
         res.send(err);
       }
-      res.status(200).json({ success: true, msg: 'File saved!', data: data });
     });
+    updatedUser.profile_img_url = `https://${process.env.S3_BUCKET_NAME}.s3.us-east-2.amazonaws.com/profile/images/${updatedUser._id}.jpeg`;
+
+    await updatedUser.save();
+    res.status(200).json({ success: true, msg: 'File saved!' });
   } catch (error) {
     return res.status(400).json({ success: false, msg: error.message });
   }
