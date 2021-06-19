@@ -259,7 +259,11 @@ exports.updateUser = async (req, res) => {
       .populate('friends')
       .populate('friend_send')
       .populate('friend_requests')
-      .populate('posts');
+      .populate({
+        path: 'posts',
+        populate: { path: 'user' },
+        options: { sort: { createdAt: -1 } },
+      });
 
     return res.status(200).json({
       success: true,
