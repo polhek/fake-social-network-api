@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 
 // Routes ...
@@ -14,6 +15,7 @@ const commentRouter = require('./routes/comments');
 
 const app = express();
 app.use(cors());
+app.use(fileUpload());
 // mongoose connection
 const mongoURL = process.env.DB_URL;
 const mongoDB = process.env.MONGODB_URI || mongoURL;
