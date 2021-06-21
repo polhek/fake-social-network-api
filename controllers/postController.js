@@ -11,9 +11,9 @@ exports.newPost = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    if (req.files) {
+    if (req.body.file) {
       const s3 = new aws.S3();
-      const fileContent = Buffer.from(req.files.file.data, 'binary');
+      const fileContent = Buffer.from(req.body.file.data, 'binary');
       const params = {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: `posts/images/`,
