@@ -30,7 +30,7 @@ exports.newPost = async (req, res) => {
     const fileContent = Buffer.from(req.files.file.data, 'binary');
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: `posts/images/fdsfsd.jpeg`,
+      Key: `posts/images/`,
       Body: fileContent,
     };
 
@@ -42,7 +42,7 @@ exports.newPost = async (req, res) => {
       const newPost = new Post({
         user: userId,
         text: text,
-        image_url: data.url,
+        image_url: data.Location,
       });
       await newPost.save();
       const loggedUser = await User.findById(userId);
