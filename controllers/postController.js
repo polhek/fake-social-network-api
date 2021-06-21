@@ -11,7 +11,7 @@ exports.newPost = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    if (!req.files) {
+    if (req.files.length === 0) {
       console.log('saving without file');
       const newPost = new Post({ user: userId, text: text });
       const post = await newPost.save();
