@@ -11,7 +11,20 @@ exports.newPost = async (req, res) => {
   const userId = req.user._id;
   const file = req.files.file;
   try {
-    if (file.size > 0) {
+    if (text.length > 0) {
+      console.log('saving without file');
+      const newPost = new Post({ user: userId, text: text });
+      const post = await newPost.save();
+      const loggedUser = await User.findById(userId);
+      loggedUser.posts.push(post._id);
+
+      await loggedUser.save();
+
+      return res
+        .status(200)
+        .json({ sucess: true, post: post, user: loggedUser });
+    }
+
       console.log('saving file to aws!!!!');
       const s3 = new aws.S3();
       const fileContent = Buffer.from(req.files.file.data, 'binary');
@@ -36,19 +49,6 @@ exports.newPost = async (req, res) => {
       return res
         .status(200)
         .json({ sucess: true, post: newPost, user: loggedUser });
-    }
-      console.log('saving without file');
-      const newPost = new Post({ user: userId, text: text });
-      const post = await newPost.save();
-      const loggedUser = await User.findById(userId);
-      loggedUser.posts.push(post._id);
-
-      await loggedUser.save();
-
-      return res
-        .status(200)
-        .json({ sucess: true, post: post, user: loggedUser });
-
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });
   }
