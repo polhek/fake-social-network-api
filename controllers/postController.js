@@ -67,7 +67,6 @@ exports.friendsOnlyPosts = async (req, res) => {
       .populate('likes', '-password')
       .sort('-createdAt');
 
-    console.log(posts);
     res.status(200).json({
       success: true,
       msg: 'All posts from friends',

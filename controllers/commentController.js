@@ -39,7 +39,6 @@ exports.deleteComment = async (req, res) => {
   try {
     const comment = await Comment.findById(comment_id);
     const post = await Post.findById(post_id);
-    console.log(comment);
 
     if (comment.user.toString() != loggedUser_id) {
       return res.status(400).json({

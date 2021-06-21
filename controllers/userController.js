@@ -95,7 +95,6 @@ exports.unsendFriendRequest = async (req, res) => {
       item != loggedUser._id.toString();
     });
 
-    console.log(updatedReceived);
     loggedUser.friend_send = updatedSend;
     secondUser.friend_requests = updatedReceived;
 
@@ -180,7 +179,6 @@ exports.cancelFriendRequest = async (req, res) => {
       item != loggedUser._id.toString();
     });
 
-    console.log(updatedReceivedLogged);
     loggedUser.friend_requests = updatedReceivedLogged;
     secondUser.friend_send = updatedReceivedSecond;
 
@@ -242,7 +240,7 @@ exports.allUsers = async (req, res) => {
     const users = await User.find({
       _id: { $ne: loggedUser_id.toString() },
     });
-    console.log(users);
+
     return res
       .status(200)
       .json({ success: true, msg: 'All users in JSON', allUsers: users });
@@ -275,7 +273,6 @@ exports.updateUser = async (req, res) => {
 
 exports.newProfileImage = async (req, res) => {
   try {
-    console.log(req.files);
     const id = req.user._id;
     const s3 = new aws.S3();
     const updatedUser = await User.findById(id);
