@@ -3,7 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const passportConfig = require('../auth/passport');
 const postController = require('../controllers/postController');
-const fileUpload = require('express-fileupload');
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 /* GET users listing. */
@@ -13,9 +12,8 @@ router.get('/', function (req, res) {
 
 router.get('/all', jwtAuth, postController.friendsOnlyPosts);
 
-router.use(fileUpload());
 //CREATE new post...
-router.post('/newPost', jwtAuth, fileUpload(), postController.newPost);
+router.post('/newPost', jwtAuth, postController.newPost);
 
 // GET post to update ...
 router.get('/:id', jwtAuth, postController.getSinglePost);
