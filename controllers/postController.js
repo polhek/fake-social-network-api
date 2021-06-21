@@ -9,9 +9,9 @@ aws.config.region = 'us-east-2';
 exports.newPost = async (req, res) => {
   const { text } = req.body;
   const userId = req.user._id;
-
+  const file = req.files.file;
   try {
-    if (req.files.file) {
+    if (file.size > 0) {
       console.log('saving file to aws!!!!');
       const s3 = new aws.S3();
       const fileContent = Buffer.from(req.files.file.data, 'binary');
