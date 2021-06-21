@@ -11,7 +11,7 @@ exports.newPost = async (req, res) => {
   const fileContent = Buffer.from(req.files.file.data, 'binary');
 
   try {
-    if (!req.files || Object.keys(req.files).length === 0) {
+    if (fileContent == null) {
       console.log('saving without file');
       const newPost = new Post({ user: userId, text: text });
       const post = await newPost.save();
