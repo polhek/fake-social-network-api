@@ -34,7 +34,7 @@ exports.newPost = async (req, res) => {
       Body: fileContent,
     };
 
-    s3.upload(params, (err, data) => {
+    s3.upload(params, async (err, data) => {
       if (err) {
         return res.status(400).json({ success: false, msg: err.message });
       }
