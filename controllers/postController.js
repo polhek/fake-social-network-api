@@ -17,7 +17,7 @@ exports.newPost = async (req, res) => {
       const fileContent = Buffer.from(req.files.file.data, 'binary');
       const params = {
         Bucket: process.env.S3_BUCKET_NAME,
-        Key: `posts/images/`,
+        Key: `posts/images/${req.files.}.jpeg`,
         Body: fileContent,
       };
 
@@ -36,7 +36,7 @@ exports.newPost = async (req, res) => {
       return res
         .status(200)
         .json({ sucess: true, post: newPost, user: loggedUser });
-    } else {
+    }
       console.log('saving without file');
       const newPost = new Post({ user: userId, text: text });
       const post = await newPost.save();
@@ -48,7 +48,7 @@ exports.newPost = async (req, res) => {
       return res
         .status(200)
         .json({ sucess: true, post: post, user: loggedUser });
-    }
+
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });
   }
