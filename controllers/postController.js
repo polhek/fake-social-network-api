@@ -11,7 +11,7 @@ exports.newPost = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    if (req.files && req.files.length) {
+    if (req.files.length > 0) {
       console.log('saving file to aws!!!!');
       const s3 = new aws.S3();
       const fileContent = Buffer.from(req.files.file.data, 'binary');
@@ -21,7 +21,7 @@ exports.newPost = async (req, res) => {
         Body: fileContent,
       };
 
-      const data = await s3.upload(params);
+      const data = await s3.upload(params).promise();
       console.log('urltoaws', data.url);
       const newPost = new Post({
         user: userId,
