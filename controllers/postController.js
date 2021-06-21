@@ -8,12 +8,11 @@ aws.config.region = 'us-east-2';
 exports.newPost = async (req, res) => {
   const { text } = req.body;
   const userId = req.user._id;
-  if (req.files) {
-    const fileContent = Buffer.from(req.files.file.data, 'binary');
-  }
+
+  const fileContent = Buffer.from(req.files.file.data, 'binary') || undefined;
 
   try {
-    if (fileContent == null) {
+    if (fileContent == undefined) {
       console.log('saving without file');
       const newPost = new Post({ user: userId, text: text });
       const post = await newPost.save();
