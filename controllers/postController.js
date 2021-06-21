@@ -1,24 +1,48 @@
 const Post = require('../models/post');
 const User = require('../models/user');
+const aws = require('aws-sdk');
+const fileUpload = require('express-fileupload');
+
+aws.config.region = 'us-east-2';
 
 //New post route ...
 exports.newPost = async (req, res) => {
   const { text } = req.body;
   const userId = req.user._id;
 
-  const newPost = new Post({
-    user: userId,
-    text: text,
-  });
-
   try {
-    const post = await newPost.save();
-    const loggedUser = await User.findById(userId);
-    loggedUser.posts.push(post._id);
+    if (req.files) {
+      const s3 = new aws.S3();
+      const fileContent = Buffer.from(req.files.file.data, 'binary');
+      const params = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: `posts/images/`,
+        Body: fileContent,
+      };
 
-    await loggedUser.save();
+      const data = await s3.upload(params);
 
-    res.status(200).json({ sucess: true, post: post, user: loggedUser });
+      const newPost = new Post({
+        user: userId,
+        text: text,
+        image_url: data.url,
+      });
+      await newPost.save();
+      const loggedUser = await User.findById(userId);
+      loggedUser.posts.push(newPost._id);
+
+      await loggedUser.save();
+      res.status(200).json({ sucess: true, post: post, user: loggedUser });
+    } else {
+      const newPost = new Post({ user: userId, text: text });
+      const post = await newPost.save();
+      const loggedUser = await User.findById(userId);
+      loggedUser.posts.push(post._id);
+
+      await loggedUser.save();
+
+      res.status(200).json({ sucess: true, post: post, user: loggedUser });
+    }
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });
   }
