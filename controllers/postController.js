@@ -9,7 +9,7 @@ aws.config.region = 'us-east-2';
 exports.newPost = async (req, res) => {
   const { text } = req.body;
   const userId = req.user._id;
-  const file = req.files.file;
+
   try {
     if (text.length > 0) {
       console.log('saving without file');
