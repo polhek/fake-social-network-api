@@ -34,18 +34,23 @@ exports.newPost = async (req, res) => {
       Body: fileContent,
     };
 
-    const data = await s3.upload(params).promise();
-    console.log('urltoaws', data.url);
-    const newPost = new Post({
-      user: userId,
-      text: text,
-      image_url: data.url,
-    });
-    await newPost.save();
-    const loggedUser = await User.findById(userId);
-    loggedUser.posts.push(newPost._id);
+    s3.upload(params, (err, data) => {
+      if (err) {
+        return res.status(400).json({ success: false, msg: err.message });
+      }
+      console.log('urltoaws', data.url);
+      const newPost = new Post({
+        user: userId,
+        text: text,
+        image_url: data.url,
+      });
+      await newPost.save();
+      const loggedUser = await User.findById(userId);
+      loggedUser.posts.push(newPost._id);
 
-    await loggedUser.save();
+      await loggedUser.save();
+    });
+
     return res
       .status(200)
       .json({ sucess: true, post: newPost, user: loggedUser });
