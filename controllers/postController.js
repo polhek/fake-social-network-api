@@ -49,11 +49,10 @@ exports.newPost = async (req, res) => {
       loggedUser.posts.push(newPost._id);
 
       await loggedUser.save();
+      return res
+        .status(200)
+        .json({ sucess: true, post: newPost, user: loggedUser });
     });
-
-    return res
-      .status(200)
-      .json({ sucess: true, post: newPost, user: loggedUser });
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });
   }
