@@ -10,7 +10,7 @@ exports.newPost = async (req, res) => {
   const { text } = req.body;
   const userId = req.user._id;
   const fileContent = Buffer.from(req.files.file.data, 'binary');
-  console.log(fileContent);
+
   try {
     if (!req.files || Object.keys(req.files).length === 0) {
       console.log('saving without file');
@@ -38,7 +38,7 @@ exports.newPost = async (req, res) => {
       if (err) {
         return res.status(400).json({ success: false, msg: err.message });
       }
-      console.log('urltoaws', data.url);
+      console.log('urltoaws', data);
       const newPost = new Post({
         user: userId,
         text: text,
