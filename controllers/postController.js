@@ -9,7 +9,7 @@ aws.config.region = 'us-east-2';
 exports.newPost = async (req, res) => {
   const { text } = req.body;
   const userId = req.user._id;
-  console.log(req);
+
   try {
     if (req.files && req.files.length) {
       console.log('saving file to aws!!!!');
@@ -33,8 +33,11 @@ exports.newPost = async (req, res) => {
       loggedUser.posts.push(newPost._id);
 
       await loggedUser.save();
-      res.status(200).json({ sucess: true, post: newPost, user: loggedUser });
+      return res
+        .status(200)
+        .json({ sucess: true, post: newPost, user: loggedUser });
     } else {
+      console.log('saving without file');
       const newPost = new Post({ user: userId, text: text });
       const post = await newPost.save();
       const loggedUser = await User.findById(userId);
@@ -42,7 +45,9 @@ exports.newPost = async (req, res) => {
 
       await loggedUser.save();
 
-      res.status(200).json({ sucess: true, post: post, user: loggedUser });
+      return res
+        .status(200)
+        .json({ sucess: true, post: post, user: loggedUser });
     }
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });
