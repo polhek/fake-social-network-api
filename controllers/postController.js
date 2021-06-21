@@ -1,9 +1,7 @@
 const Post = require('../models/post');
 const User = require('../models/user');
 const aws = require('aws-sdk');
-const fileUpload = require('express-fileupload');
-import { v4 as uuidv4 } from 'uuid';
-
+const { v4: uuidv4 } = require('uuid');
 aws.config.region = 'us-east-2';
 
 //New post route ...
