@@ -15,7 +15,7 @@ router.get('/all', jwtAuth, postController.friendsOnlyPosts);
 
 router.use(fileUpload());
 //CREATE new post...
-router.post('/newPost', jwtAuth, postController.newPost);
+router.post('/newPost', jwtAuth, fileUpload(), postController.newPost);
 
 // GET post to update ...
 router.get('/:id', jwtAuth, postController.getSinglePost);
