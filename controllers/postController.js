@@ -11,7 +11,8 @@ exports.newPost = async (req, res) => {
   const userId = req.user._id;
   console.log(req);
   try {
-    if (req.files && req.files.length) {
+    if (req.files.file) {
+      console.log('saving file to aws!!!!');
       const s3 = new aws.S3();
       const fileContent = Buffer.from(req.files.file.data, 'binary');
       const params = {
