@@ -4,7 +4,7 @@ const aws = require('aws-sdk');
 const fileUpload = require('express-fileupload');
 
 aws.config.region = 'us-east-2';
-
+app.use(fileUpload());
 //New post route ...
 exports.newPost = async (req, res) => {
   const { text } = req.body;
