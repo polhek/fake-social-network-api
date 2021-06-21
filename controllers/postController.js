@@ -32,7 +32,7 @@ exports.newPost = async (req, res) => {
       loggedUser.posts.push(newPost._id);
 
       await loggedUser.save();
-      res.status(200).json({ sucess: true, post: post, user: loggedUser });
+      res.status(200).json({ sucess: true, post: newPost, user: loggedUser });
     } else {
       const newPost = new Post({ user: userId, text: text });
       const post = await newPost.save();
