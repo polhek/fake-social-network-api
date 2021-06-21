@@ -20,9 +20,8 @@ exports.newPost = async (req, res) => {
 
       await loggedUser.save();
 
-      return res
-        .status(200)
-        .json({ sucess: true, post: post, user: loggedUser });
+      res.status(200).json({ sucess: true, post: post, user: loggedUser });
+      return;
     }
 
     console.log('saving file to aws!!!!');
@@ -30,7 +29,7 @@ exports.newPost = async (req, res) => {
     const fileContent = Buffer.from(req.files.file.data, 'binary');
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: `posts/images/${req.files}.jpeg`,
+      Key: `posts/images/fdsfsd.jpeg`,
       Body: fileContent,
     };
 
