@@ -2,6 +2,7 @@ const Post = require('../models/post');
 const User = require('../models/user');
 const aws = require('aws-sdk');
 const fileUpload = require('express-fileupload');
+import { v4 as uuidv4 } from 'uuid';
 
 aws.config.region = 'us-east-2';
 
@@ -30,7 +31,7 @@ exports.newPost = async (req, res) => {
     const fileContent = Buffer.from(req.files.file.data, 'binary');
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: `posts/images/`,
+      Key: `posts/images/${uuidv4()}.jpeg`,
       Body: fileContent,
     };
 
