@@ -4,14 +4,14 @@ const aws = require('aws-sdk');
 const fileUpload = require('express-fileupload');
 
 aws.config.region = 'us-east-2';
-app.use(fileUpload());
+
 //New post route ...
 exports.newPost = async (req, res) => {
   const { text } = req.body;
   const userId = req.user._id;
 
   try {
-    if (text.length > 0) {
+    if (!req.files) {
       console.log('saving without file');
       const newPost = new Post({ user: userId, text: text });
       const post = await newPost.save();
