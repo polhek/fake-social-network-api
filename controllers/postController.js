@@ -22,7 +22,7 @@ exports.newPost = async (req, res) => {
       };
 
       const data = await s3.upload(params);
-      console.log('data', data);
+      console.log('urltoaws', data.url);
       const newPost = new Post({
         user: userId,
         text: text,
