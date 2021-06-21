@@ -9,11 +9,11 @@ aws.config.region = 'us-east-2';
 exports.newPost = async (req, res) => {
   const { text } = req.body;
   const userId = req.user._id;
-
+  console.log(req);
   try {
-    if (req.body.file) {
+    if (req.files && req.files.length) {
       const s3 = new aws.S3();
-      const fileContent = Buffer.from(req.body.file.data, 'binary');
+      const fileContent = Buffer.from(req.files.file.data, 'binary');
       const params = {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: `posts/images/`,
