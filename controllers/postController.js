@@ -25,30 +25,30 @@ exports.newPost = async (req, res) => {
         .json({ sucess: true, post: post, user: loggedUser });
     }
 
-      console.log('saving file to aws!!!!');
-      const s3 = new aws.S3();
-      const fileContent = Buffer.from(req.files.file.data, 'binary');
-      const params = {
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: `posts/images/${req.files.}.jpeg`,
-        Body: fileContent,
-      };
+    console.log('saving file to aws!!!!');
+    const s3 = new aws.S3();
+    const fileContent = Buffer.from(req.files.file.data, 'binary');
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: `posts/images/${req.files}.jpeg`,
+      Body: fileContent,
+    };
 
-      const data = await s3.upload(params).promise();
-      console.log('urltoaws', data.url);
-      const newPost = new Post({
-        user: userId,
-        text: text,
-        image_url: data.url,
-      });
-      await newPost.save();
-      const loggedUser = await User.findById(userId);
-      loggedUser.posts.push(newPost._id);
+    const data = await s3.upload(params).promise();
+    console.log('urltoaws', data.url);
+    const newPost = new Post({
+      user: userId,
+      text: text,
+      image_url: data.url,
+    });
+    await newPost.save();
+    const loggedUser = await User.findById(userId);
+    loggedUser.posts.push(newPost._id);
 
-      await loggedUser.save();
-      return res
-        .status(200)
-        .json({ sucess: true, post: newPost, user: loggedUser });
+    await loggedUser.save();
+    return res
+      .status(200)
+      .json({ sucess: true, post: newPost, user: loggedUser });
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });
   }
