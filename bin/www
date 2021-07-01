@@ -21,7 +21,7 @@ app.set('port', port);
 
 var server = http.createServer(app);
 const io = require("socket.io")(server, {
-  cors: {origin: "https://localhost:3000/"}
+  cors: {origin: ["https://localhost:3000/"]}
 })
 /**
  * Listen on provided port, on all network interfaces.
