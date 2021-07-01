@@ -12,7 +12,7 @@ require('dotenv').config();
 const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 const commentRouter = require('./routes/comments');
-const commentController = require('./public/javascripts/notificationController')
+
 const app = express();
 
 app.use(fileUpload());
