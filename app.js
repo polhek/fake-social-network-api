@@ -14,6 +14,7 @@ const postsRouter = require('./routes/posts');
 const commentRouter = require('./routes/comments');
 
 const app = express();
+
 app.use(fileUpload());
 app.use(cors());
 
