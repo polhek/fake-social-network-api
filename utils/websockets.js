@@ -4,7 +4,11 @@ let io = null;
 module.exports = {
     //Initialize the socket server
     initialize: function(httpServer) {
-        io = sio(httpServer);
+        io = sio(httpServer, {
+          cors: {
+            origin: '*',
+          }
+        });
         io.on('connection', function(socket) {
             console.log('New client connected with id = ', socket.id);
             socket.on('disconnect', function(reason) {
