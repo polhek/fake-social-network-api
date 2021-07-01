@@ -6,6 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const fileUpload = require('express-fileupload');
+const watchMongoDb = require('./controllers/notificationController')
 require('dotenv').config();
 
 // Routes ...
@@ -34,6 +35,7 @@ const connectDB = async () => {
     });
 
     console.log(`Mongoose is running on: ${mongoDB}`);
+    watchMongoDb.watchPostChange()
   } catch (err) {
     console.log(`Failed to connect to ${mongoDB}!`);
   }
