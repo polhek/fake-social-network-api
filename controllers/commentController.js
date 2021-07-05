@@ -1,7 +1,7 @@
 const Comment = require('../models/comments');
 const Post = require('../models/post');
 const user = require('../models/user');
-const Notification = require('../models.');
+const Notification = require('../models/notification');
 
 //add new comment...
 exports.newComment = async (req, res) => {
@@ -41,14 +41,12 @@ exports.newComment = async (req, res) => {
     await newComment.save();
     await userWhoWrotePost.save();
     await newNotification.save();
-    return res
-      .status(200)
-      .json({
-        success: true,
-        msg: 'Comment was added!',
-        post: updatedPost,
-        newNotification,
-      });
+    return res.status(200).json({
+      success: true,
+      msg: 'Comment was added!',
+      post: updatedPost,
+      newNotification,
+    });
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });
   }
