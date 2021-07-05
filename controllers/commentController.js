@@ -1,5 +1,7 @@
 const Comment = require('../models/comments');
 const Post = require('../models/post');
+const user = require('../models/user');
+const Notification = require('../models.');
 
 //add new comment...
 exports.newComment = async (req, res) => {
@@ -15,17 +17,38 @@ exports.newComment = async (req, res) => {
         msg: 'Post cannot be find, and comment cannot be created!',
       });
     }
+
+    const userWhoWrotePost = await user.findById(post.user._id);
+    const userWhoCommented = await user.findById(loggedUser_id);
     const newComment = new Comment({
       text: text,
       user: loggedUser_id,
     });
+
+    const newNotification = new Notification({
+      text: `You have new comment from ${userWhoCommented.first_name} ${userWhoCommented.last_name}`,
+      from_user: loggedUser_id,
+      type: 'comment',
+    });
+
+    const updatedNotifications = [...user.notifications, newNotification._id];
+    userWhoWrotePost.notifications = updatedNotifications;
+
     const updatedComments = [...post.comments, newComment._id];
     post.comments = updatedComments;
+
     const updatedPost = await post.save();
     await newComment.save();
+    await userWhoWrotePost.save();
+    await newNotification.save();
     return res
       .status(200)
-      .json({ success: true, msg: 'Comment was added!', post: updatedPost });
+      .json({
+        success: true,
+        msg: 'Comment was added!',
+        post: updatedPost,
+        newNotification,
+      });
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });
   }

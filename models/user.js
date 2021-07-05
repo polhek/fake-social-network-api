@@ -11,6 +11,7 @@ const UserSchema = new Schema({
   friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   friend_send: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   friend_requests: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
   facebook_id: { type: String },
 });
 
