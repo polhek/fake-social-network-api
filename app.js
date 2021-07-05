@@ -13,7 +13,7 @@ require('dotenv').config();
 const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 const commentRouter = require('./routes/comments');
-const notificationRouter = require('./router/notifications');
+const notificationRouter = require('./routes/notifications');
 
 const app = express();
 
