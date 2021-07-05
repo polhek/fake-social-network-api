@@ -261,7 +261,8 @@ exports.updateUser = async (req, res) => {
       .populate({
         path: 'posts',
         populate: { path: 'user' },
-      });
+      })
+      .populate('notifications');
 
     return res.status(200).json({
       success: true,
