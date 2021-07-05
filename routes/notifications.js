@@ -6,6 +6,6 @@ const notificationController = require('../controllers/notificationController');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-router.delete('/:id/read', notificationController.readNotification);
+router.delete('/:id/read', jwtAuth, notificationController.readNotification);
 
 module.exports = router;
