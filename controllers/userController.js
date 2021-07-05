@@ -5,8 +5,6 @@ const fileUpload = require('express-fileupload');
 
 aws.config.region = 'us-east-2';
 
-
-
 exports.facebookLogin = async (req, res) => {
   try {
     const { _id } = req.user;
@@ -17,7 +15,8 @@ exports.facebookLogin = async (req, res) => {
       .populate('friends')
       .populate('friend_send')
       .populate('friend_requests')
-      .populate('posts');
+      .populate('posts')
+      .populate('notifications');
 
     res.status(200).json({
       success: true,
