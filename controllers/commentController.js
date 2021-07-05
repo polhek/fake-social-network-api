@@ -19,6 +19,7 @@ exports.newComment = async (req, res) => {
     }
 
     const userWhoWrotePost = await user.findById(post.user._id);
+    console.log(userWhoWrotePost);
     const userWhoCommented = await user.findById(loggedUser_id);
     const newComment = new Comment({
       text: text,
@@ -31,7 +32,10 @@ exports.newComment = async (req, res) => {
       type: 'comment',
     });
 
-    const updatedNotifications = [...user.notifications, newNotification._id];
+    const updatedNotifications = [
+      ...userWhoWrotePost.notifications,
+      newNotification._id,
+    ];
     userWhoWrotePost.notifications = updatedNotifications;
 
     const updatedComments = [...post.comments, newComment._id];
