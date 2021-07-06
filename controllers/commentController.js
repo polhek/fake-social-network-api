@@ -19,7 +19,7 @@ exports.newComment = async (req, res) => {
     }
 
     const userWhoWrotePost = await user.findById(post.user._id);
-    console.log(userWhoWrotePost);
+
     const userWhoCommented = await user.findById(loggedUser_id);
     const newComment = new Comment({
       text: text,
@@ -49,7 +49,6 @@ exports.newComment = async (req, res) => {
       success: true,
       msg: 'Comment was added!',
       post: updatedPost,
-      newNotification,
     });
   } catch (err) {
     return res.status(400).json({ success: false, msg: err.message });

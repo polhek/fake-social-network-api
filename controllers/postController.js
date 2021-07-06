@@ -2,6 +2,7 @@ const Post = require('../models/post');
 const User = require('../models/user');
 const aws = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
+const Notification = require('../models/notification');
 aws.config.region = 'us-east-2';
 
 //New post route ...
@@ -174,14 +175,31 @@ exports.likePost = async (req, res) => {
     const post = await Post.findById(post_id);
 
     const likesArr = post.likes;
+    const userWhoWrotePost = await User.findById(post.user._id);
+    const userWhoLiked = await User.findById(loggedUser_id);
 
     if (likesArr.includes(loggedUser_id)) {
       const updatedLikes = likesArr.filter(
         (item) => item != loggedUser_id.toString()
       );
+
       post.likes = updatedLikes;
       await post.save();
     } else {
+      const newNotification = new Notification({
+        text: `You have new like from ${userWhoLiked.first_name} ${userWhoLiked.last_name}`,
+        from_user: loggedUser_id,
+        type: 'like',
+      });
+
+      const updatedNotifications = [
+        ...userWhoWrotePost.notifications,
+        newNotification._id,
+      ];
+
+      userWhoWrotePost.notifications = updatedNotifications;
+      await userWhoWrotePost.save();
+      await newNotification.save();
       const updatedLikes = [...likesArr, loggedUser_id];
       post.likes = updatedLikes;
       await post.save();
