@@ -12,7 +12,7 @@ This is backend for my fake social network. It was build using NodeJS and Expres
 
 ## Frontend Repository
 
-[Frontend Github Repository](https://github.com/polhek/blog-front-end-react)
+[Frontend Github Repository](https://github.com/polhek/fake-social-network-front)
 
 ## To make app work:
 
