@@ -25,3 +25,7 @@ You need to provide in your .env file the following variables:
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 - S3_BUCKET_NAME
+
+## TODO:
+
+- reconstruct/add to the app normal login, with username and password, for the sake of testing the app without Facebook oAuth, so everyone can join and test the app, not just "test" users with the right Facebook authentication token.

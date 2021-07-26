@@ -14,6 +14,11 @@ router.get('/', function (req, res) {
   res.render('index', { title: 'Express' });
 });
 
+// for the sake of having a live app, just normal login/register method!
+router.post('/register', userController.register_POST);
+
+router.post('/login', userController.login_POST);
+
 router.post('/oauth/facebook', fbAuth, userController.facebookLogin);
 
 // Send friend request!

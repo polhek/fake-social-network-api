@@ -12,7 +12,6 @@ const aws = require('aws-sdk');
 aws.config.region = 'us-east-2';
 
 // Secret for JWT token strategy ...
-
 const secretOrKey = process.env.secretOrKey;
 
 // Facebook app secret and ID ...

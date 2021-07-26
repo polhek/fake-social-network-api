@@ -2,8 +2,57 @@ const User = require('../models/user');
 const utils = require('../utils/utils');
 const aws = require('aws-sdk');
 const fileUpload = require('express-fileupload');
+const bcrypt = require('bcryptjs');
 
+// region of S3 bucket
 aws.config.region = 'us-east-2';
+
+// for the sake of having a live app... also the option to register/login without
+// facebook oAuth.
+exports.register_POST = async (req, res) => {
+  try {
+    const { first_name, last_name, email, password } = req.body;
+    const defaultImgUrl = 'https://www.w3schools.com/howto/img_avatar.png';
+
+    const user = await User.findOne({ email: email });
+    if (user) {
+      return res.status(400).json({
+        success: false,
+        msg: 'User with this name already exists!',
+      });
+    }
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const newUser = new User({
+        first_name,
+        last_name,
+        email,
+        profile_img_url: defaultImgUrl,
+        password: hashedPassword,
+      });
+
+      const savedUser = await newUser.save();
+      const token = utils.issueJwtToken(savedUser);
+      return res.status(200).json({
+        success: true,
+        user: savedUser,
+        token: token.token,
+        expiresIn: token.expires,
+      });
+    } catch (err) {
+      res.status(500).json({ err: err.msg });
+    }
+  } catch (err) {
+    return res.status(500).json({ sucess: false, msg: err.message });
+  }
+};
+
+// LOGIN for the sake of testing the app on github live
+
+exports.login_POST = async (req, res) => {
+  //! todo
+};
 
 exports.facebookLogin = async (req, res) => {
   try {
