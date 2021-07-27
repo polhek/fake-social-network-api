@@ -51,7 +51,54 @@ exports.register_POST = async (req, res) => {
 // LOGIN for the sake of testing the app on github live
 
 exports.login_POST = async (req, res) => {
-  //! todo
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, msg: 'User could not be found' });
+    }
+
+    try {
+      const result = await bcrypt.compare(password, user.password);
+
+      if (!result) {
+        return res.status(401).json({
+          success: false,
+          msg: 'You entered the wrong password!',
+        });
+      }
+
+      if (result) {
+        const user = await User.findOne({ email: email })
+          .select('-password')
+          .populate('friends')
+          .populate('friend_send')
+          .populate('friend_requests')
+          .populate('posts')
+          .populate('notifications');
+
+        const token = utils.issueJwtToken(user);
+
+        return res.status(200).json({
+          success: true,
+          user: user,
+          token: token.token,
+          expiresIn: token.expires,
+        });
+      }
+    } catch (error) {
+      res.status(401).json({
+        success: false,
+        msg: 'You entered the wrong password!',
+        err: error.message,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({ sucess: false, msg: error.message });
+  }
 };
 
 exports.facebookLogin = async (req, res) => {
